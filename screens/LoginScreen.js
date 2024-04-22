@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import SignupScreen from './SignupScreen';
-import ProfileScreen from './ProfileScreen';
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +14,6 @@ const LoginScreen = () => {
   const handleSignup = () => {
     navigation.navigate('SignupScreen'); // Navigate to SignupScreen
   };
-
 
 
   const handleSubmit = async () => {
@@ -32,7 +30,7 @@ const LoginScreen = () => {
       setError("An error occurred while logging in.");
     }
   };
- 
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>LEARNIT</Text>

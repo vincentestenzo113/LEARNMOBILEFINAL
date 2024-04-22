@@ -9,25 +9,26 @@ const SignupScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
-  const [verifyPassword, setVerifyPassword] = useState(''); // Add verifyPassword state
+  const [verifyPassword, setVerifyPassword] = useState('');
   const navigation = useNavigation();
 
   const handleSignup = async () => {
-      try {
-          const response = await axios.post('https://learnit-bde1.onrender.com/SignupScreen', {
-              studentID,
-              email,
-              firstName,
-              lastName,
-              password
-          });
-          if (!response.ok) {
-              throw new Error('Error signing up');
-          }
-          navigation.navigate('LoginScreen'); // Use navigation to go to LoginScreen
-      } catch (error) {
-          console.error('Signup error:', error);
+    try {
+      const response = await axios.post('https://learnit-bde1.onrender.com/SignupScreen', {
+        studentID,
+        email,
+        firstName,
+        lastName,
+        password,
+      });
+      if (response.status === 200) {
+        navigation.navigate('Login');
+      } else {
+        throw new Error('Error signing up');
       }
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
 
   return (

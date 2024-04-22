@@ -4,14 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'; // Assuming you're using Expo for vector icons
 import { useNavigation } from '@react-navigation/native'; // Navigation hook
 import { ProgressBar } from 'react-native-paper';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const ProfileScreen = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [editingBio, setEditingBio] = useState(false); // State to track if bio is being edited
-  const [newBio, setNewBio] = useState(""); // State to store the new bio
   const navigation = useNavigation(); // Navigation hook
 
   useEffect(() => {
@@ -27,20 +24,8 @@ const ProfileScreen = () => {
         console.error("Error fetching user data:", error);
       }
     };
-  
     fetchUserData();
   }, []);
-
-  const handleSaveBio = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("token");
-      await axios.put(`https://learnit-bde1.onrender.com/users/${userId}`, { bio: newBio });
-      setUserData({ ...userData, bio: newBio }); // Update the bio in the local state
-      setEditingBio(false); // Exit editing mode
-    } catch (error) {
-      console.error("Error updating bio:", error);
-    }
-  };
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -92,19 +77,16 @@ const ProfileScreen = () => {
     // Add more courses as needed
   ];
 
-  // Sample user data
-  const userId = '12345';
-  const userEmail = "";
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.sidebarIcon} onPress={toggleSidebar}>
         <MaterialIcons name={sidebarVisible ? 'menu-open' : 'menu'} size={24} color="black" />
       </TouchableOpacity>
-      {sidebarVisible && (
+      {sidebarVisible ? (
         <View style={styles.sidebar}>
-          <Image source={require('../assets/profile.jpg')} style={styles.profileImage} />
-          <Text style={styles.profileTitle}>John</Text>
+          <Image source={require('../assets/icon.png')} style={styles.profileImage} />
+          <Text style={styles.profileTitle}>{'Vincent Estenzo'}</Text>
           <TouchableOpacity style={styles.sidebarButton} onPress={handleSettings}>
             <MaterialIcons name="settings" size={24} color="black" />
             <Text style={styles.buttonText}>Settings</Text>
@@ -113,16 +95,11 @@ const ProfileScreen = () => {
             <MaterialIcons name="logout" size={24} color="black" />
             <Text style={styles.buttonText}onPress= {() => navigation.navigate('Login')}>Logout</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.sidebarButton} onPress={() => navigation.navigate('UserInfo')}>
-            <MaterialIcons name="person" size={24} color="black" />
-            <Text style={styles.buttonText}>User Info</Text>
-          </TouchableOpacity>
-          <View style={styles.userInfoContainer}>
-            <Text>User ID: {userId}</Text>
-            <Text>Email: {userEmail}</Text>
+          <View style={styles.userInfoContainer}>    
+            <Text>User ID: {'2021302071'}</Text>
           </View>
         </View>
-      )}
+      ) : null}
       <View style={styles.content}>
         <Text style={styles.title}>My Courses</Text>
         {courses.map(course => (
