@@ -28,7 +28,7 @@ const CourseContentScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Want to Learm more of IT ?</Text>
+      <Text style={styles.title}>Want to Learn more of IT ?</Text>
       <FlatList
         data={courses}
         renderItem={renderItem}
