@@ -46,12 +46,19 @@ const ProfileScreen = () => {
     setSidebarVisible(!sidebarVisible);
   };
 
-  const handleLogout = () => {
-    // Implement logout logic here
-  };
+  const handleLogout = async () => {
+    try {
+      // Clear user token or any relevant authentication data from AsyncStorage
+      await AsyncStorage.removeItem("token");
 
+      // Navigate to the login screen
+      navigation.navigate('Login');
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   const handleSettings = () => {
-    // Navigate to settings screen or implement settings logic here
+    navigation.navigate('Settings')
   };
 
   const handleAddCourse = () => {
@@ -60,7 +67,7 @@ const ProfileScreen = () => {
 
   const handleViewContent = (content) => {
     // Navigate to CourseContentScreen passing the content
-    navigation.navigate('CourseContent', { content });
+    navigation.navigate({ content });
   };
 
   // Sample data for courses and their progress
@@ -124,7 +131,7 @@ const ProfileScreen = () => {
             <Text style={styles.courseTitle}>{course.title}</Text>
             <ProgressBar progress={course.progress} color={'blue'} style={styles.progressBar} />
             <Text style={styles.courseDescription}>{course.description}</Text>
-            <Button title="View Content" onPress={() => handleViewContent(course.content)} />
+            <Button title="LearnIT !" onPress={() => handleViewContent(course.content)} />
           </View>
         ))}
         <TouchableOpacity style={styles.addButton} onPress={handleAddCourse}>
