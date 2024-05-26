@@ -1,20 +1,28 @@
+// CourseContentScreen.js
 import React, { useState } from 'react';
 import { View, Text, Button, FlatList, Modal, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useCourses } from '../screens/CourseContext';
 
 const CourseContentScreen = () => {
-  // Sample course data
+  const { enrollInCourse } = useCourses();
+
   const courses = [
     { id: '1', title: 'Javascript Basics', description: 'Learn the fundamentals of Javascript.', image: require('../assets/javascript.png') },
     { id: '2', title: 'Database Basics', description: 'Understand the basics of databases and SQL.', image: require('../assets/database.png') },
     { id: '3', title: 'API Basics', description: 'Learn about APIs and how to interact with them.', image: require('../assets/API.png') },
-    // Add more courses as needed
   ];
 
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [numColumns, setNumColumns] = useState(2); // Number of columns for FlatList
+  const [numColumns, setNumColumns] = useState(2);
 
   const handleSelectCourse = (courseId) => {
     setSelectedCourse(courseId);
+  };
+
+  const handleEnrollCourse = () => {
+    const course = courses.find((c) => c.id === selectedCourse);
+    enrollInCourse(course);
+    setSelectedCourse(null);
   };
 
   const renderItem = ({ item }) => (
@@ -32,7 +40,7 @@ const CourseContentScreen = () => {
       <FlatList
         data={courses}
         renderItem={renderItem}
-        key={`${numColumns}`} // Force re-render when numColumns changes
+        key={`${numColumns}`}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
       />
@@ -42,7 +50,7 @@ const CourseContentScreen = () => {
             <Text style={styles.modalTitle}>{courses.find((c) => c.id === selectedCourse)?.title}</Text>
             <Text>{courses.find((c) => c.id === selectedCourse)?.description}</Text>
             <View style={styles.modalButtons}>
-              <Button title="Enroll to this Course" onPress={() => console.log(`Enrolling in course ${selectedCourse}`)} />
+              <Button title="Enroll to this Course" onPress={handleEnrollCourse} />
               <View style={styles.buttonSpacer} />
               <Button title="Close" onPress={() => setSelectedCourse(null)} />
             </View>

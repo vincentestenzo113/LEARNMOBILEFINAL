@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'; // Assuming you're using Expo for vector icons
 import { useNavigation } from '@react-navigation/native'; // Navigation hook
 import { ProgressBar } from 'react-native-paper';
 import axios from 'axios';
+import { useCourses } from '../screens/CourseContext';
 
 const ProfileScreen = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [userData, setUserData] = useState(null);
   const navigation = useNavigation(); // Navigation hook
+  const { enrolledCourses, unenrollFromCourse } = useCourses();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,8 +44,9 @@ const ProfileScreen = () => {
       console.error("Error logging out:", error);
     }
   };
+
   const handleSettings = () => {
-    navigation.navigate('Settings')
+    navigation.navigate('Settings');
   };
 
   const handleAddCourse = () => {
@@ -55,28 +58,23 @@ const ProfileScreen = () => {
     navigation.navigate({ content });
   };
 
-  // Sample data for courses and their progress
-  const courses = [
-    { 
-      id: '1', 
-      title: 'HTML', 
-      progress: 0.6, 
-      description: 'Learn the basics of HTML', 
-      content: 'Course content for Course 1. This could be a long text describing the course content in detail.',
-      image: require('../assets/course1.png')
-    },
-    { 
-      id: '2', 
-      title: 'CSS', 
-      progress: 0.3, 
-      description: 'Learn the basics of CSS', 
-      content: 'Course content for Course 2. This could be a long text describing the course content in detail.',
-      image: require('../assets/course2.png')
-    },
+  const handleUnenroll = (courseId) => {
+    unenrollFromCourse(courseId);
+  };
 
-    // Add more courses as needed
-  ];
-
+  const renderCourseItem = ({ item }) => (
+    <View key={item.id} style={styles.courseItem}>
+      <Image source={item.image} style={styles.courseImage} />
+      <Text style={styles.courseTitle}>{item.title}</Text>
+      <ProgressBar progress={item.progress} color={'blue'} style={styles.progressBar} />
+      <Text style={styles.courseDescription}>{item.description}</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="LearnIT !" onPress={() => handleViewContent(item.content)} />
+        <View style={styles.buttonSpacer} />
+        <Button title="Unenroll" onPress={() => handleUnenroll(item.id)} />
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -86,31 +84,27 @@ const ProfileScreen = () => {
       {sidebarVisible ? (
         <View style={styles.sidebar}>
           <Image source={require('../assets/icon.png')} style={styles.profileImage} />
-          <Text style={styles.profileTitle}>{'Vincent Estenzo'}</Text>
+          <Text style={styles.profileTitle}>{userData ? userData.name : 'User'}</Text>
           <TouchableOpacity style={styles.sidebarButton} onPress={handleSettings}>
             <MaterialIcons name="settings" size={24} color="black" />
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sidebarButton} onPress={handleLogout}>
             <MaterialIcons name="logout" size={24} color="black" />
-            <Text style={styles.buttonText}onPress= {() => navigation.navigate('Login')}>Logout</Text>
+            <Text style={styles.buttonText} onPress={() => navigation.navigate('Login')}>Logout</Text>
           </TouchableOpacity>
           <View style={styles.userInfoContainer}>    
-            <Text>User ID: {'2021302071'}</Text>
+            <Text>User ID: {userData ? userData.id : 'Loading...'}</Text>
           </View>
         </View>
       ) : null}
       <View style={styles.content}>
         <Text style={styles.title}>My Courses</Text>
-        {courses.map(course => (
-          <View key={course.id} style={styles.courseItem}>
-            <Image source={course.image} style={styles.courseImage} />
-            <Text style={styles.courseTitle}>{course.title}</Text>
-            <ProgressBar progress={course.progress} color={'blue'} style={styles.progressBar} />
-            <Text style={styles.courseDescription}>{course.description}</Text>
-            <Button title="LearnIT !" onPress={() => handleViewContent(course.content)} />
-          </View>
-        ))}
+        <FlatList
+          data={enrolledCourses}
+          renderItem={renderCourseItem}
+          keyExtractor={(item) => item.id}
+        />
         <TouchableOpacity style={styles.addButton} onPress={handleAddCourse}>
           <Text style={styles.addButtonLabel}>Add Another Course</Text>
         </TouchableOpacity>
@@ -177,9 +171,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   courseImage: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 90,
     marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  buttonSpacer: {
+    width: 10,
   },
   addButton: {
     backgroundColor: 'blue',

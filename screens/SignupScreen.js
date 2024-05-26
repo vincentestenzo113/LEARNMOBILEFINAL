@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
@@ -33,6 +33,8 @@ const SignupScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/amonglogo.png')} style={styles.logo} />
+      <Text style={styles.description}>Join LEARNIT - Your learning journey starts here</Text>
       <Text style={styles.title}>LEARNIT</Text>
       <TextInput
         style={styles.input}
@@ -92,6 +94,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F8FF', // Cyan color
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 100, // Adjust as needed
+    height: 100, // Adjust as needed
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,

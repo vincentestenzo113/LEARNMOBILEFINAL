@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   const navigation = useNavigation();
-  
+
   const handleSignup = () => {
     navigation.navigate('SignupScreen'); // Navigate to SignupScreen
   };
-
 
   const handleSubmit = async () => {
     try {
@@ -33,6 +31,8 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/amonglogo.png')} style={styles.logo} />
+      <Text style={styles.description}>Welcome to LEARNIT - Your learning journey starts here</Text>
       <Text style={styles.title}>LEARNIT</Text>
       <TextInput
         style={styles.input}
@@ -56,6 +56,7 @@ const LoginScreen = () => {
           <Button title="Signup" onPress={handleSignup} />
         </View>
       </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
@@ -66,6 +67,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F8FF', // Cyan color
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 150, // Adjust as needed
+    height: 150, // Adjust as needed
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
@@ -88,6 +100,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '45%',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
   },
 });
 
