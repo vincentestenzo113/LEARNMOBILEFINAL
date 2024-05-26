@@ -1,15 +1,14 @@
-// CourseContentScreen.js
 import React, { useState } from 'react';
-import { View, Text, Button, FlatList, Modal, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Button, FlatList, Modal, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useCourses } from '../screens/CourseContext';
 
 const CourseContentScreen = () => {
   const { enrollInCourse } = useCourses();
 
   const courses = [
-    { id: '1', title: 'Javascript Basics', description: 'Learn the fundamentals of Javascript.', image: require('../assets/javascript.png') },
-    { id: '2', title: 'Database Basics', description: 'Understand the basics of databases and SQL.', image: require('../assets/database.png') },
-    { id: '3', title: 'API Basics', description: 'Learn about APIs and how to interact with them.', image: require('../assets/API.png') },
+    { id: '1', title: 'Javascript Basics', description: 'Learn the fundamentals of Javascript.', longDescription: 'This course will cover the basics of Javascript, including syntax, variables, loops, functions, and more. You will learn how to create dynamic web pages and enhance user interactions. ', image: require('../assets/javascript.png') },
+    { id: '2', title: 'Database Basics', description: 'Understand the basics of databases and SQL.', longDescription: 'This course will teach you the fundamentals of database management systems and SQL. You will learn how to create, read, update, and delete data in a database, as well as how to design efficient database schemas.', image: require('../assets/database.png') },
+    { id: '3', title: 'API Basics', description: 'Learn about APIs and how to interact with them.', longDescription: 'This course introduces you to APIs (Application Programming Interfaces) and how to use them to interact with different software systems. You will learn how to make API calls, handle responses, and integrate third-party services into your applications.', image: require('../assets/API.png') },
   ];
 
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -48,7 +47,9 @@ const CourseContentScreen = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>{courses.find((c) => c.id === selectedCourse)?.title}</Text>
-            <Text>{courses.find((c) => c.id === selectedCourse)?.description}</Text>
+            <ScrollView style={styles.scrollView}>
+              <Text>{courses.find((c) => c.id === selectedCourse)?.longDescription}</Text>
+            </ScrollView>
             <View style={styles.modalButtons}>
               <Button title="Enroll to this Course" onPress={handleEnrollCourse} />
               <View style={styles.buttonSpacer} />
@@ -100,11 +101,16 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     elevation: 5,
+    width: '80%',
+    height: '60%',
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  scrollView: {
+    marginVertical: 10,
   },
   modalButtons: {
     flexDirection: 'row',

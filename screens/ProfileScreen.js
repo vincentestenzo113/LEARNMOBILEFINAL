@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image, FlatList, Modal, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialIcons } from '@expo/vector-icons'; // Assuming you're using Expo for vector icons
 import { useNavigation } from '@react-navigation/native'; // Navigation hook
@@ -10,6 +10,7 @@ import { useCourses } from '../screens/CourseContext';
 const ProfileScreen = () => {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null); // New state for selected course
   const navigation = useNavigation(); // Navigation hook
   const { enrolledCourses, unenrollFromCourse } = useCourses();
 
@@ -17,18 +18,18 @@ const ProfileScreen = () => {
     const fetchUserData = async () => {
       try {
         const userId = await AsyncStorage.getItem("token");
-        console.log(userId); // Log the user ID
-        const response = await axios.get(
-          `https://learnit-bde1.onrender.com/users/${userId}`
-        );
+        if (!userId) {
+          throw new Error("No user token found");
+        }
+        console.log("Fetching data for user ID:", userId);
+        const response = await axios.get(`https://learnit-bde1.onrender.com/users/${userId}`);
         setUserData(response.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching user data:", error.response ? error.response.data : error.message);
       }
     };
     fetchUserData();
   }, []);
-
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
@@ -53,9 +54,8 @@ const ProfileScreen = () => {
     navigation.navigate('CourseContent'); // Navigate to CourseContentScreen
   };
 
-  const handleViewContent = (content) => {
-    // Navigate to CourseContentScreen passing the content
-    navigation.navigate({ content });
+  const handleViewContent = (course) => {
+    setSelectedCourse(course); // Set selected course
   };
 
   const handleUnenroll = (courseId) => {
@@ -69,7 +69,7 @@ const ProfileScreen = () => {
       <ProgressBar progress={item.progress} color={'blue'} style={styles.progressBar} />
       <Text style={styles.courseDescription}>{item.description}</Text>
       <View style={styles.buttonContainer}>
-        <Button title="LearnIT !" onPress={() => handleViewContent(item.content)} />
+        <Button title="LearnIT !" onPress={() => handleViewContent(item)} />
         <View style={styles.buttonSpacer} />
         <Button title="Unenroll" onPress={() => handleUnenroll(item.id)} />
       </View>
@@ -84,7 +84,7 @@ const ProfileScreen = () => {
       {sidebarVisible ? (
         <View style={styles.sidebar}>
           <Image source={require('../assets/icon.png')} style={styles.profileImage} />
-          <Text style={styles.profileTitle}>{userData ? userData.name : 'User'}</Text>
+          <Text style={styles.profileTitle}>{userData ? userData.name : 'Vincent Estenzo'}</Text>
           <TouchableOpacity style={styles.sidebarButton} onPress={handleSettings}>
             <MaterialIcons name="settings" size={24} color="black" />
             <Text style={styles.buttonText}>Settings</Text>
@@ -94,7 +94,7 @@ const ProfileScreen = () => {
             <Text style={styles.buttonText} onPress={() => navigation.navigate('Login')}>Logout</Text>
           </TouchableOpacity>
           <View style={styles.userInfoContainer}>    
-            <Text>User ID: {userData ? userData.id : 'Loading...'}</Text>
+            <Text>User ID: {userData ? userData.id : '2021302071'}</Text>
           </View>
         </View>
       ) : null}
@@ -109,6 +109,20 @@ const ProfileScreen = () => {
           <Text style={styles.addButtonLabel}>Add Another Course</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={selectedCourse !== null} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{selectedCourse?.title}</Text>
+            <ScrollView>
+              <Text>{selectedCourse?.longDescription}</Text>
+            </ScrollView>
+            <View style={styles.modalButtons}>
+              <Button title="Close" onPress={() => setSelectedCourse(null)} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -195,6 +209,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   userInfoContainer: {
+    marginTop: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#FFF',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    width: '80%',
+    height: '60%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 20,
   },
 });

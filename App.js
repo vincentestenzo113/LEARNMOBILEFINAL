@@ -15,9 +15,9 @@ export default function App() {
   return (
     <CourseProvider>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Profile">
+      <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="SignupScreen" component={SignupScreen} />     
