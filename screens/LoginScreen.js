@@ -16,7 +16,7 @@ const LoginScreen = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('https://learnit-bde1.onrender.com/LoginScreen', { email, password });
+      const response = await axios.post('https://learnit-1-aggl.onrender.com/LoginScreen', { email, password });
       if (response.data.message === "Login Successfully") {
         console.log(response.data.userId);
         navigation.navigate('ProfileScreen');
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 40,
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#90E4C1',
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,

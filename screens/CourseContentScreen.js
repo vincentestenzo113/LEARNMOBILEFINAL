@@ -7,7 +7,7 @@ const CourseContentScreen = () => {
 
   const courses = [
     { id: '1', title: 'Javascript Basics', description: 'Learn the fundamentals of Javascript.', longDescription: 'This course will cover the basics of Javascript, including syntax, variables, loops, functions, and more. You will learn how to create dynamic web pages and enhance user interactions. ', image: require('../assets/javascript.png') },
-    { id: '2', title: 'Database Basics', description: 'Understand the basics of databases and SQL.', longDescription: 'This course will teach you the fundamentals of database management systems and SQL. You will learn how to create, read, update, and delete data in a database, as well as how to design efficient database schemas.', image: require('../assets/database.png') },
+    { id: '2', title: 'HTML', description: 'Understand the basics of HTML.', longDescription: 'HTML, or HyperText Markup Language, is the standard language used to create and design web pages. It forms the backbone of web content, providing the basic structure and layout for websites. ', image: require('../assets/course1.png') },
     { id: '3', title: 'API Basics', description: 'Learn about APIs and how to interact with them.', longDescription: 'This course introduces you to APIs (Application Programming Interfaces) and how to use them to interact with different software systems. You will learn how to make API calls, handle responses, and integrate third-party services into your applications.', image: require('../assets/API.png') },
   ];
 

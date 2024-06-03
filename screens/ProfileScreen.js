@@ -13,19 +13,21 @@ const ProfileScreen = () => {
   const [selectedCourse, setSelectedCourse] = useState(null); // New state for selected course
   const navigation = useNavigation(); // Navigation hook
   const { enrolledCourses, unenrollFromCourse } = useCourses();
-
+  
+  // Fetch User Data with Token Retrieval
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userId = await AsyncStorage.getItem("token");
+        const userId = await AsyncStorage.getItem('token');
+        console.log('Retrieved token:', userId); // Debug log
         if (!userId) {
-          throw new Error("No user token found");
+          throw new Error('No user token found');
         }
-        console.log("Fetching data for user ID:", userId);
-        const response = await axios.get(`https://learnit-bde1.onrender.com/users/${userId}`);
+        console.log('Fetching data for user ID:', userId);
+        const response = await axios.get(`https://learnit-1-aggl.onrender.com/users/${userId}`);
         setUserData(response.data);
       } catch (error) {
-        console.error("Error fetching user data:", error.response ? error.response.data : error.message);
+        console.error('Error fetching user data:', error.response ? error.response.data : error.message);
       }
     };
     fetchUserData();
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
   },
   sidebar: {
     width: 200,
-    backgroundColor: '#F0F8FF', // Cyan color
+    backgroundColor: '#90E4C1', // Cyan color
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
